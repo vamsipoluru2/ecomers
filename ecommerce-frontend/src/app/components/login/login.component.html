@@ -1,0 +1,52 @@
+<div class="container col-md-4">
+  <div class="card shadow-lg login-card">
+    <div class="login-header">
+      <h3>Welcome Back 👋</h3>
+      <p>Please login to your account</p>
+    </div>
+
+    <div class="login-body">
+      <form #f="ngForm" (ngSubmit)="onSubmit(f)">
+        <div class="mb-3">
+          <label>Email</label>
+          <input
+            type="email"
+            name="email"
+            class="form-control"
+            placeholder="Enter your email"
+            required
+            [(ngModel)]="email"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label>Password</label>
+          <input
+            type="password"
+            name="password"
+            class="form-control"
+            placeholder="Enter your password"
+            required
+            [(ngModel)]="password"
+          />
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100" [disabled]="isLoading || f.invalid">
+          {{ isLoading ? 'Logging in...' : 'Login' }}
+        </button>
+      </form>
+
+      <div class="text-center mt-3">
+        <span>Don't have an account?</span>
+        <a routerLink="/register" class="ms-1">Sign up</a>
+      </div>
+
+      <div *ngIf="error" class="alert alert-danger text-center mt-3">
+        {{ error }}
+      </div>
+      <div *ngIf="message" class="alert alert-success text-center mt-3">
+        {{ message }}
+      </div>
+    </div>
+  </div>
+</div>

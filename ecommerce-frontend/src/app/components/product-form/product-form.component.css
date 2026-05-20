@@ -1,0 +1,9 @@
+.container {
+  max-width: 600px;
+}
+button {
+  min-width: 120px;
+}
+.alert {
+  margin-top: 10px;
+}

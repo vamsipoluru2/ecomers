@@ -1,0 +1,60 @@
+.container {
+  max-width: 1200px;
+}
+
+.card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: none;
+}
+
+.card-header {
+  font-weight: 600;
+}
+
+.list-group-item {
+  border-left: none;
+  border-right: none;
+}
+
+.list-group-item:first-child {
+  border-top: none;
+}
+
+.list-group-item:last-child {
+  border-bottom: none;
+}
+
+.form-label {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #3399cc;
+  box-shadow: 0 0 0 0.2rem rgba(51, 153, 204, 0.25);
+}
+
+.btn-primary {
+  background-color: #3399cc;
+  border-color: #3399cc;
+}
+
+.btn-primary:hover {
+  background-color: #2d87b3;
+  border-color: #2d87b3;
+}
+
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+}
+
+.alert {
+  border-radius: 0.5rem;
+}
+
+.text-danger {
+  color: #dc3545 !important;
+}
+

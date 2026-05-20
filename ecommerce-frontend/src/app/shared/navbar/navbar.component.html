@@ -1,0 +1,42 @@
+<nav class="navbar navbar-expand-lg navbar-light py-3 shadow-sm bg-white">
+  <div class="container">
+    <a class="navbar-brand brand" (click)="navigateHome()" style="cursor: pointer;">QUICKMART</a>
+
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+        <li class="nav-item" *ngIf="!isAdmin()">
+          <a class="nav-link" (click)="navigateHome()" style="cursor: pointer;">HOME</a>
+        </li>
+        <li class="nav-item" *ngIf="!isAdmin()"><a class="nav-link" routerLink="/orders">ORDERS</a></li>
+        <li class="nav-item" *ngIf="!isAdmin()"><a class="nav-link" routerLink="/cart">CART</a></li>
+
+        <ng-container *ngIf="!isLoggedIn(); else loggedIn">
+          <li class="nav-item">
+            <a class="btn btn-outline-dark px-3 me-2" routerLink="/register">SIGN UP</a>
+          </li>
+          <li class="nav-item">
+            <a class="btn btn-outline-dark px-3" routerLink="/login">LOGIN</a>
+          </li>
+        </ng-container>
+
+        <ng-template #loggedIn>
+          <li class="nav-item d-flex align-items-center user-info me-3">
+            👋 Logged in as: <span class="ms-1">{{ user()?.name }}</span>
+          </li>
+          <li class="nav-item">
+            <button class="btn btn-dark px-3" (click)="logout()">LOGOUT</button>
+          </li>
+        </ng-template>
+      </ul>
+    </div>
+  </div>
+</nav>

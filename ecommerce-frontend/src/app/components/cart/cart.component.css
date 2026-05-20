@@ -1,0 +1,12 @@
+/* Light polish similar to Bootstrap page */
+.container {
+  border-radius: 0.75rem;
+}
+
+table img {
+  object-fit: cover;
+}
+
+.table > :not(caption) > * > * {
+  vertical-align: middle;
+}

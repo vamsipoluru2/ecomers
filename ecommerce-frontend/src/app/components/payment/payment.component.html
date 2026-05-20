@@ -1,0 +1,38 @@
+<div class="container mt-4 col-md-6">
+  <div class="card shadow">
+    <div class="card-body">
+      <h3 class="mb-3">Payment</h3>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label class="form-label">Method</label>
+          <select class="form-select" formControlName="method">
+            <option value="CARD">Credit/Debit Card</option>
+            <option value="UPI">UPI</option>
+            <option value="COD">Cash on Delivery</option>
+          </select>
+        </div>
+
+        <div *ngIf="method === 'CARD'">
+          <div class="mb-3"><label class="form-label">Name on Card</label><input class="form-control" formControlName="nameOnCard" /></div>
+          <div class="mb-3"><label class="form-label">Card Number</label><input class="form-control" formControlName="cardNumber" maxlength="19" /></div>
+          <div class="row g-2">
+            <div class="col"><label class="form-label">Expiry (MM/YY)</label><input class="form-control" formControlName="expiry" placeholder="MM/YY" /></div>
+            <div class="col"><label class="form-label">CVV</label><input class="form-control" formControlName="cvv" maxlength="4" /></div>
+          </div>
+        </div>
+
+        <div *ngIf="method === 'UPI'">
+          <div class="mb-3"><label class="form-label">UPI ID</label><input class="form-control" formControlName="upiId" placeholder="name@bank" /></div>
+        </div>
+
+        <button class="btn btn-primary w-100 mt-3" type="submit" [disabled]="loading">
+          {{ loading ? 'Processing…' : 'Pay Now' }}
+        </button>
+
+        <div class="alert alert-success mt-3" *ngIf="success">{{ success }}</div>
+        <div class="alert alert-danger  mt-3" *ngIf="error">{{ error }}</div>
+      </form>
+    </div>
+  </div>
+</div>

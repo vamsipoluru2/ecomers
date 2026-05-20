@@ -1,0 +1,82 @@
+<div class="container mt-5">
+  <h2 class="text-center mb-4">{{ title }}</h2>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-3">Loading orders...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !isLoading" class="alert alert-danger text-center">
+    <strong>⚠️ Error:</strong> {{ error }}
+    <div class="mt-2">
+      <button class="btn btn-sm btn-outline-danger" (click)="loadOrders()">Retry</button>
+    </div>
+  </div>
+
+  <!-- Orders Table -->
+  <div *ngIf="!isLoading && !error">
+    <table class="table table-bordered text-center bg-white">
+      <thead class="table-dark">
+        <tr>
+          <th>Order ID</th>
+          <th *ngIf="showAllOrders">Customer</th>
+          <th>Date</th>
+          <th>Total</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let order of displayOrders">
+          <td>{{ order.id }}</td>
+          <td *ngIf="showAllOrders">{{ order.user?.name || 'Unknown' }}</td>
+          <td>{{ order.orderDate | date : 'medium' }}</td>
+          <td>₹{{ order.totalAmount }}</td>
+          <td>
+            <span
+              class="badge"
+              [class.bg-success]="order.paymentStatus === 'PAID'"
+              [class.bg-warning]="order.paymentStatus === 'CREATED'"
+              [class.bg-danger]="order.paymentStatus === 'FAILED'"
+            >
+              {{ order.paymentStatus || 'CREATED' }}
+            </span>
+          </td>
+          <td>
+            <div class="d-flex gap-2 justify-content-center">
+              <!-- View Order -->
+              <a
+                *ngIf="linkBase && order.id; else viewBtn"
+                class="btn btn-sm btn-info"
+                [routerLink]="[linkBase, order.id]"
+              >
+                View
+              </a>
+              <ng-template #viewBtn>
+                <button class="btn btn-sm btn-info" (click)="onView(order.id)">View</button>
+              </ng-template>
+
+              <!-- Download Invoice -->
+              <button
+                class="btn btn-sm btn-success"
+                (click)="downloadInvoice(order.id)"
+                title="Download Invoice"
+              >
+                📄 Invoice
+              </button>
+            </div>
+          </td>
+        </tr>
+
+        <tr *ngIf="!displayOrders || displayOrders.length === 0">
+          <td [attr.colspan]="showAllOrders ? 6 : 5" class="text-muted py-4">No orders found.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

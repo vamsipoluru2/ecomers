@@ -1,0 +1,5 @@
+.brand { font-weight: 700; letter-spacing: 1px; }
+.nav-link.active { font-weight: 600; }
+.user-info span { font-weight: 600; margin-left: 4px; }
+.logout-btn { background:#111; color:#fff; }
+

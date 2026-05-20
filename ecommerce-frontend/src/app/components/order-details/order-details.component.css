@@ -1,0 +1,8 @@
+.card { border-radius: 12px; }
+.item { display: grid; grid-template-columns: 60px 1fr auto; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid #f1f3f5; }
+.item:last-child { border-bottom: 0; }
+.item img { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; }
+.item .name { font-weight: 600; }
+.item .muted { color: #6c757d; font-size: .9rem; }
+.sum-row { display: flex; justify-content: space-between; margin: 6px 0; }
+.sum-row.total { font-weight: 700; font-size: 1.1rem; }

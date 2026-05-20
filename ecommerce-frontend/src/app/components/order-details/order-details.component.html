@@ -1,0 +1,111 @@
+<div class="container mt-4" *ngIf="!loading && order; else loadingTpl">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0">Order #{{ order.id }}</h3>
+    <div>
+      <button class="btn btn-success me-2" (click)="downloadInvoice()">
+        📄 Download Invoice
+      </button>
+      <a routerLink="/orders" class="btn btn-secondary">Back to Orders</a>
+    </div>
+  </div>
+  
+  <div class="text-muted mb-3">
+    Placed on {{ order.createdAt | date:'medium' }} • 
+    Status: 
+    <span
+      class="badge"
+      [class.bg-success]="order.status === 'PAID'"
+      [class.bg-warning]="order.status === 'CREATED'"
+      [class.bg-danger]="order.status === 'FAILED'"
+    >
+      {{ order.status }}
+    </span>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="mb-3">Order Items</h5>
+          <table class="table table-bordered">
+            <thead class="table-light">
+              <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let it of order.items; trackBy: trackByName">
+                <td>
+                  <div class="d-flex align-items-center">
+                    <img [src]="img(it.imageUrl)" alt="{{ it.productName }}" width="60" height="60" class="me-2 rounded" />
+                    <div>{{ it.productName }}</div>
+                  </div>
+                </td>
+                <td>{{ it.quantity }}</td>
+                <td>₹{{ it.price | number:'1.2-2' }}</td>
+                <td>₹{{ it.totalPrice | number:'1.2-2' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <!-- Shipping Address (only show if available) -->
+      <div class="card mb-3" *ngIf="order.shippingAddress">
+        <div class="card-body">
+          <h6 class="mb-2">Shipping Address</h6>
+          <div>{{ order.shippingAddress.fullName }}</div>
+          <div>{{ order.shippingAddress.line1 }}</div>
+          <div *ngIf="order.shippingAddress.line2">{{ order.shippingAddress.line2 }}</div>
+          <div>{{ order.shippingAddress.city }}, {{ order.shippingAddress.state }} {{ order.shippingAddress.zip }}</div>
+          <div *ngIf="order.shippingAddress.phone">Phone: {{ order.shippingAddress.phone }}</div>
+        </div>
+      </div>
+
+      <!-- Order Summary -->
+      <div class="card">
+        <div class="card-body">
+          <h6 class="mb-2">Order Summary</h6>
+          <div class="d-flex justify-content-between mb-2">
+            <span>Subtotal:</span>
+            <span>₹{{ order.subtotal | number:'1.2-2' }}</span>
+          </div>
+          <div class="d-flex justify-content-between mb-2" *ngIf="order.shipping > 0">
+            <span>Shipping:</span>
+            <span>₹{{ order.shipping | number:'1.2-2' }}</span>
+          </div>
+          <div class="d-flex justify-content-between mb-2" *ngIf="order.tax > 0">
+            <span>Tax:</span>
+            <span>₹{{ order.tax | number:'1.2-2' }}</span>
+          </div>
+          <hr />
+          <div class="d-flex justify-content-between">
+            <strong>Total:</strong>
+            <strong class="text-primary">₹{{ order.total | number:'1.2-2' }}</strong>
+          </div>
+          <div class="text-muted small mt-2">Payment Method: {{ order.paymentMethod }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #loadingTpl>
+  <div class="container mt-4">
+    <div *ngIf="loading" class="alert alert-info text-center">
+      <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+      Loading order details...
+    </div>
+    <div *ngIf="error" class="alert alert-danger">
+      {{ error }}
+      <div class="mt-2">
+        <a routerLink="/orders" class="btn btn-sm btn-outline-secondary">Back to Orders</a>
+      </div>
+    </div>
+  </div>
+</ng-template>

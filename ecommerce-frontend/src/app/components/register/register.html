@@ -1,0 +1,47 @@
+<div class="bg-light page">
+  <div class="container mt-5 col-md-5">
+    <div class="card shadow-lg">
+      <div class="card-body">
+        <h3 class="text-center text-success mb-4">Create Account</h3>
+
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="mb-3">
+            <label class="form-label">Name</label>
+            <input type="text" class="form-control" formControlName="name" />
+            <div class="text-danger small" *ngIf="f.name.touched && f.name.invalid">
+              Name is required (min 2 characters).
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" formControlName="email" />
+            <div class="text-danger small" *ngIf="f.email.touched && f.email.invalid">
+              Enter a valid email address.
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" class="form-control" formControlName="password" />
+            <div class="text-danger small" *ngIf="f.password.touched && f.password.invalid">
+              Password must be at least 6 characters.
+            </div>
+          </div>
+
+          <button class="btn btn-success w-100" type="submit" [disabled]="loading">
+            {{ loading ? 'Registering…' : 'Register' }}
+          </button>
+
+          <div class="alert alert-success mt-3" *ngIf="successMsg">{{ successMsg }}</div>
+          <div class="alert alert-danger mt-3" *ngIf="errorMsg">{{ errorMsg }}</div>
+        </form>
+
+        <p class="text-center mt-3">
+          Already registered?
+          <a [routerLink]="['/login']">Login</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

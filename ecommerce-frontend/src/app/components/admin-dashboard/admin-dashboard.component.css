@@ -1,0 +1,47 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background: linear-gradient(to right, #e3f2fd, #ffffff);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.dashboard-container {
+  margin-top: 80px;
+}
+
+h2 {
+  text-align: center;
+  color: #007bff;
+  font-weight: bold;
+  margin-bottom: 40px;
+}
+
+.card {
+  border-radius: 15px;
+  padding: 35px 20px;
+  text-align: center;
+  color: white;
+  font-weight: 600;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.manage { background-color: #007bff; }
+.stats  { background-color: #198754; }
+.orders { background-color: #ffc107; color: #333; }
+
+footer {
+  margin-top: 60px;
+  text-align: center;
+  color: #555;
+}
+
+.no-underline {
+  text-decoration: none;
+  display: block;
+}

@@ -1,0 +1,138 @@
+<div class="container mt-5 mb-5">
+  <h2 class="text-center mb-4">📊 Admin Statistics Dashboard</h2>
+
+  <div *ngIf="loading" class="alert alert-info text-center">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2 mb-0">Loading statistics...</p>
+  </div>
+  
+  <div *ngIf="error" class="alert alert-danger text-center">{{ error }}</div>
+
+  <ng-container *ngIf="!loading && stats">
+    <!-- KPI Cards -->
+    <div class="row g-4 mb-4">
+      <div class="col-md-3">
+        <div class="card stat-card bg-primary text-white h-100">
+          <div class="card-body text-center">
+            <div class="stat-icon">👥</div>
+            <h3 class="stat-value">{{ stats.totalUsers }}</h3>
+            <p class="stat-label mb-0">Total Users</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card stat-card bg-success text-white h-100">
+          <div class="card-body text-center">
+            <div class="stat-icon">📦</div>
+            <h3 class="stat-value">{{ stats.totalOrders }}</h3>
+            <p class="stat-label mb-0">Total Orders</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card stat-card bg-warning text-white h-100">
+          <div class="card-body text-center">
+            <div class="stat-icon">💰</div>
+            <h3 class="stat-value">₹{{ stats.totalRevenue | number:'1.0-0' }}</h3>
+            <p class="stat-label mb-0">Total Revenue</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card stat-card bg-info text-white h-100">
+          <div class="card-body text-center">
+            <div class="stat-icon">🛍️</div>
+            <h3 class="stat-value">{{ stats.totalProducts }}</h3>
+            <p class="stat-label mb-0">Total Products</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Secondary Stats -->
+    <div class="row g-4 mb-4">
+      <div class="col-md-4">
+        <div class="card h-100">
+          <div class="card-body text-center">
+            <h5 class="card-title">📊 Items Sold</h5>
+            <h2 class="text-primary">{{ stats.totalItemsSold }}</h2>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card h-100">
+          <div class="card-body text-center">
+            <h5 class="card-title">💵 Avg Order Value</h5>
+            <h2 class="text-success">₹{{ stats.avgOrderValue | number:'1.2-2' }}</h2>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card h-100">
+          <div class="card-body text-center">
+            <h5 class="card-title">⏳ Pending Orders</h5>
+            <h2 class="text-warning">{{ stats.pendingOrders }}</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row g-4 mb-4">
+      <!-- Order Status Pie Chart -->
+      <div class="col-md-6">
+        <div class="card h-100">
+          <div class="card-body">
+            <div class="chart-container" style="position: relative; height: 350px;">
+              <canvas #orderStatusChart></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category Bar Chart -->
+      <div class="col-md-6">
+        <div class="card h-100">
+          <div class="card-body">
+            <div class="chart-container" style="position: relative; height: 350px;">
+              <canvas #categoryChart></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order Status Breakdown -->
+    <div class="row g-4">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title mb-4">Order Status Breakdown</h5>
+            <div class="row text-center">
+              <div class="col-md-4">
+                <div class="status-box bg-success bg-opacity-10 p-3 rounded">
+                  <h3 class="text-success">{{ stats.paidOrders }}</h3>
+                  <p class="mb-0">✅ Paid Orders</p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="status-box bg-warning bg-opacity-10 p-3 rounded">
+                  <h3 class="text-warning">{{ stats.pendingOrders }}</h3>
+                  <p class="mb-0">⏳ Pending Orders</p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="status-box bg-danger bg-opacity-10 p-3 rounded">
+                  <h3 class="text-danger">{{ stats.failedOrders }}</h3>
+                  <p class="mb-0">❌ Failed Orders</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>
