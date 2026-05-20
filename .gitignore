@@ -1,8 +1,42 @@
-﻿ecommerce-backend/.git
+﻿# Ignore nested repository metadata
+ecommerce-backend/.git
 ecommerce-frontend/.git
-
 ecommerce-backend/.git-backup
 ecommerce-frontend/.git-backup
 
-ecommerce-backend/.git-backup
-ecommerce-frontend/.git-backup
+# Ignore workspace IDE metadata
+.metadata/
+
+# Backend project ignores
+HELP.md
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
