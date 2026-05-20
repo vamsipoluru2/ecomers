@@ -1,11 +1,14 @@
 package com.ecommerce.model;
 
 import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "cart_item", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"user_id", "product_id"})
 })
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class CartItem {
 
     @Id
@@ -15,6 +18,7 @@ public class CartItem {
     // Who owns this cart line
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id")
+    @JsonIgnore  // ✅ prevent recursive serialization and ByteBuddy proxy issues
     private User user;
 
     // What product

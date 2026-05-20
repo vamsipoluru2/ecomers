@@ -22,7 +22,8 @@ public class OrderService {
     // ✅ Creates a local order WITH the owning user
     @Transactional
     public Order placeOrder(List<CartItem> cartItems, User user) {
-        if (cartItems == null || cartItems.isEmpty()) return null;
+        if (cartItems == null || cartItems.isEmpty())
+            return null;
         if (user == null || user.getId() == null) {
             throw new IllegalArgumentException("User must be logged in to place an order");
         }
@@ -67,7 +68,8 @@ public class OrderService {
     @Transactional
     public Order markPaid(Long orderId, String paymentId, String signature) {
         Order order = getOrderById(orderId);
-        if (order == null) return null;
+        if (order == null)
+            return null;
         order.setRazorpayPaymentId(paymentId);
         order.setRazorpaySignature(signature);
         order.setPaymentStatus(PaymentStatus.PAID);
@@ -78,17 +80,23 @@ public class OrderService {
     @Transactional
     public Order markFailed(Long orderId) {
         Order order = getOrderById(orderId);
-        if (order == null) return null;
+        if (order == null)
+            return null;
         order.setPaymentStatus(PaymentStatus.FAILED);
         return orderRepository.save(order);
     }
 
+    // ✅ Fetch all orders with relationships eagerly loaded to avoid
+    // LazyInitializationException
+    @Transactional(readOnly = true)
     public List<Order> getAllOrders() {
-        return orderRepository.findAll();
+        return orderRepository.findAllWithDetails();
     }
 
+    // ✅ Fetch single order with relationships eagerly loaded
+    @Transactional(readOnly = true)
     public Order getOrderById(Long id) {
-        return orderRepository.findById(id).orElse(null);
+        return orderRepository.findByIdWithDetails(id).orElse(null);
     }
 
     @Transactional

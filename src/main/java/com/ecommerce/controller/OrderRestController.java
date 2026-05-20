@@ -1,38 +1,54 @@
+// src/main/java/com/ecommerce/controller/OrderRestController.java
 package com.ecommerce.controller;
 
+import com.ecommerce.api.ApiResponse;
 import com.ecommerce.model.Order;
 import com.ecommerce.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
-@RequestMapping("/orders")
-public class OrderController {
+import java.util.List;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/orders")
+@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
+public class OrderRestController {
 
     @Autowired
     private OrderService orderService;
 
-    // ✅ List all orders
+    // ✅ 1. List all orders
     @GetMapping
-    public String listOrders(Model model) {
-        model.addAttribute("orders", orderService.getAllOrders());
-        return "order_list";
+    public ResponseEntity<?> listOrders() {
+        List<Order> orders = orderService.getAllOrders();
+        return ResponseEntity.ok(ApiResponse.ok(Map.of("orders", orders)));
     }
 
-    // ✅ View single order
+    // ✅ 2. View single order details
     @GetMapping("/{id}")
-    public String viewOrder(@PathVariable Long id, Model model) {
+    public ResponseEntity<?> viewOrder(@PathVariable Long id) {
         Order order = orderService.getOrderById(id);
-        model.addAttribute("order", order);
-        return "order_details";
+        if (order == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApiResponse.fail("Order not found"));
+        }
+        return ResponseEntity.ok(ApiResponse.ok(Map.of("order", order)));
     }
 
-    // ✅ Delete order
-    @GetMapping("/delete/{id}")
-    public String deleteOrder(@PathVariable Long id) {
-        orderService.deleteOrder(id);
-        return "redirect:/orders";
+    // ✅ 3. Delete an order
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteOrder(@PathVariable Long id) {
+        try {
+            orderService.deleteOrder(id);
+            return ResponseEntity.ok(ApiResponse.ok(Map.of(
+                "message", "Order deleted successfully",
+                "deletedOrderId", id
+            )));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError()
+                    .body(ApiResponse.fail("Error deleting order: " + e.getMessage()));
+        }
     }
 }

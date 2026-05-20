@@ -16,7 +16,7 @@ public class Order {
     private LocalDateTime orderDate;
 
     @Column(nullable = false)
-    private double totalAmount;
+    private Double totalAmount;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -35,9 +35,10 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items = new ArrayList<>();
 
-    public Order() { }
+    public Order() {
+    }
 
-    public Order(double totalAmount) {
+    public Order(Double totalAmount) {
         this.totalAmount = totalAmount;
         this.orderDate = LocalDateTime.now();
         this.paymentStatus = PaymentStatus.CREATED;
@@ -45,40 +46,89 @@ public class Order {
 
     @PrePersist
     public void prePersist() {
-        if (orderDate == null) orderDate = LocalDateTime.now();
-        if (paymentStatus == null) paymentStatus = PaymentStatus.CREATED;
+        if (orderDate == null)
+            orderDate = LocalDateTime.now();
+        if (paymentStatus == null)
+            paymentStatus = PaymentStatus.CREATED;
+        if (totalAmount == null)
+            totalAmount = 0.0; // Default to 0 if null
     }
 
     @PreUpdate
     public void preUpdate() {
-        if (paymentStatus == null) paymentStatus = PaymentStatus.CREATED;
+        if (paymentStatus == null)
+            paymentStatus = PaymentStatus.CREATED;
+        if (totalAmount == null)
+            totalAmount = 0.0; // Default to 0 if null
     }
 
     // Getters & Setters
 
-    public Long getId() { return id; }
+    public Long getId() {
+        return id;
+    }
 
-    public LocalDateTime getOrderDate() { return orderDate; }
-    public void setOrderDate(LocalDateTime orderDate) { this.orderDate = orderDate; }
+    public LocalDateTime getOrderDate() {
+        return orderDate;
+    }
 
-    public double getTotalAmount() { return totalAmount; }
-    public void setTotalAmount(double totalAmount) { this.totalAmount = totalAmount; }
+    public void setOrderDate(LocalDateTime orderDate) {
+        this.orderDate = orderDate;
+    }
 
-    public PaymentStatus getPaymentStatus() { return paymentStatus; }
-    public void setPaymentStatus(PaymentStatus paymentStatus) { this.paymentStatus = paymentStatus; }
+    public Double getTotalAmount() {
+        return totalAmount;
+    }
 
-    public String getRazorpayOrderId() { return razorpayOrderId; }
-    public void setRazorpayOrderId(String razorpayOrderId) { this.razorpayOrderId = razorpayOrderId; }
+    public void setTotalAmount(Double totalAmount) {
+        this.totalAmount = totalAmount;
+    }
 
-    public String getRazorpayPaymentId() { return razorpayPaymentId; }
-    public void setRazorpayPaymentId(String razorpayPaymentId) { this.razorpayPaymentId = razorpayPaymentId; }
+    public PaymentStatus getPaymentStatus() {
+        return paymentStatus;
+    }
 
-    public String getRazorpaySignature() { return razorpaySignature; }
-    public void setRazorpaySignature(String razorpaySignature) { this.razorpaySignature = razorpaySignature; }
+    public void setPaymentStatus(PaymentStatus paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
 
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
+    public String getRazorpayOrderId() {
+        return razorpayOrderId;
+    }
 
-    public List<OrderItem> getItems() { return items; }
-    public void setItems(List<OrderItem> items) { this.items = items; }
+    public void setRazorpayOrderId(String razorpayOrderId) {
+        this.razorpayOrderId = razorpayOrderId;
+    }
+
+    public String getRazorpayPaymentId() {
+        return razorpayPaymentId;
+    }
+
+    public void setRazorpayPaymentId(String razorpayPaymentId) {
+        this.razorpayPaymentId = razorpayPaymentId;
+    }
+
+    public String getRazorpaySignature() {
+        return razorpaySignature;
+    }
+
+    public void setRazorpaySignature(String razorpaySignature) {
+        this.razorpaySignature = razorpaySignature;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<OrderItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<OrderItem> items) {
+        this.items = items;
+    }
 }

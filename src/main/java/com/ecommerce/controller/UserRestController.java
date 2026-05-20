@@ -1,16 +1,24 @@
+// src/main/java/com/ecommerce/controller/UserRestController.java
 package com.ecommerce.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import com.ecommerce.api.ApiResponse;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
-@RequestMapping("/user")
-public class UserController {
+import java.util.Map;
 
+@RestController
+@RequestMapping("/api/user")
+@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
+public class UserRestController {
+
+    // ✅ User home (replaces "user-home.jsp")
     @GetMapping("/home")
-    public String home() {
-        return "user-home"; // JSP name
+    public ResponseEntity<?> home() {
+        // You can later add personalized data like user info, recommendations, etc.
+        return ResponseEntity.ok(ApiResponse.ok(Map.of(
+                "message", "Welcome to the user dashboard!",
+                "info", "This is your home endpoint for Angular."
+        )));
     }
 }
-

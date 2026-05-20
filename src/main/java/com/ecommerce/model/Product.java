@@ -20,7 +20,9 @@ public class Product {
 
     private String category;
 
+    @Column(name = "image_url")
     private String imageUrl;
+
 
     public Product() {}
 

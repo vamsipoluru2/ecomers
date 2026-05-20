@@ -2,6 +2,7 @@ package com.ecommerce.service;
 
 import com.ecommerce.model.Product;
 import com.ecommerce.repository.ProductRepository;
+import com.ecommerce.repository.OrderItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,9 @@ public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private OrderItemRepository orderItemRepository;
 
     private static final String UPLOAD_DIR = "src/main/resources/static/images/";
 
@@ -50,7 +54,8 @@ public class ProductService {
     // ✅ Update existing product (image optional)
     public void update(Long id, Product updatedProduct, MultipartFile file) throws IOException {
         Product existingProduct = productRepository.findById(id).orElse(null);
-        if (existingProduct == null) return;
+        if (existingProduct == null)
+            return;
 
         existingProduct.setName(updatedProduct.getName());
         existingProduct.setCategory(updatedProduct.getCategory());
@@ -67,6 +72,13 @@ public class ProductService {
 
     // ✅ Delete product by ID
     public void delete(Long id) {
+        // Check if product exists in any orders
+        long orderCount = orderItemRepository.countByProductId(id);
+        if (orderCount > 0) {
+            throw new IllegalStateException(
+                    "Cannot delete product. It exists in " + orderCount + " order(s). " +
+                            "Products that have been ordered cannot be deleted to maintain order history.");
+        }
         productRepository.deleteById(id);
     }
 
@@ -85,7 +97,8 @@ public class ProductService {
 
     // ✅ Save uploaded image to static folder
     private String saveImageFile(MultipartFile file) throws IOException {
-        if (file == null || file.isEmpty()) return null;
+        if (file == null || file.isEmpty())
+            return null;
 
         String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
         Path filePath = Paths.get(UPLOAD_DIR + fileName);

@@ -1,77 +1,106 @@
+// src/main/java/com/ecommerce/controller/AuthRestController.java
 package com.ecommerce.controller;
 
+import com.ecommerce.api.ApiResponse;
 import com.ecommerce.model.User;
 import com.ecommerce.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.Map;
 
-@Controller
-public class AuthController {
+@RestController
+@RequestMapping("/api/auth")
+@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
+public class AuthRestController {
 
     @Autowired
     private UserService userService;
 
-    // ✅ Show login form
+    // ✅ (was GET /login view) — keep same behavior: clear previous session
     @GetMapping("/login")
-    public String showLoginPage(HttpSession session) {
+    public ResponseEntity<?> showLoginPage(HttpSession session) {
         session.invalidate(); // Clear previous session
-        return "login"; // goes to /WEB-INF/views/login.jsp
+        return ResponseEntity.ok(ApiResponse.ok(Map.of("message", "login_page")));
     }
 
-    // ✅ Handle login submission
+    // ✅ Handle login submission (was POST /login -> redirects)
+    // Now returns JSON + sets session exactly like before.
     @PostMapping("/login")
-    public String loginUser(@RequestParam("email") String email,
-                            @RequestParam("password") String password,
-                            HttpSession session,
-                            Model model) {
+    public ResponseEntity<?> loginUser(@RequestBody Map<String, String> body,
+                                       HttpSession session) {
+        String email = body.get("email");
+        String password = body.get("password");
 
         User user = userService.login(email, password);
 
         if (user != null) {
             session.setAttribute("loggedUser", user);
 
-            if ("ADMIN".equalsIgnoreCase(user.getRole())) {
-                return "redirect:/admin/dashboard";
-            } else {
-                return "redirect:/user/home";
-            }
+            // Preserve original redirect decision, but send it as data for Angular to navigate.
+            String redirect = "ADMIN".equalsIgnoreCase(user.getRole())
+                    ? "/admin/dashboard"
+                    : "/user/home";
+
+            return ResponseEntity.ok(ApiResponse.ok(Map.of(
+                    "userId", user.getId(),
+                    "name", user.getName(),
+                    "email", user.getEmail(),
+                    "role", user.getRole(),
+                    "redirect", redirect
+            )));
         } else {
-            model.addAttribute("error", "Invalid email or password!");
-            return "login";
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(ApiResponse.fail("Invalid email or password!"));
         }
     }
 
-    // ✅ Show registration form
+    // ✅ (was GET /register view) — Angular renders its own form; return an empty template if you want
     @GetMapping("/register")
-    public String showRegisterPage(Model model) {
-        model.addAttribute("user", new User());
-        return "register"; // goes to /WEB-INF/views/register.jsp
+    public ResponseEntity<?> showRegisterPage() {
+        return ResponseEntity.ok(ApiResponse.ok(Map.of("template", new User())));
     }
 
-    // ✅ Handle registration form
+    // ✅ Handle registration (was POST /register -> go to login view)
+    // Keep same logic: DO NOT auto-login; just create and tell Angular to go to login.
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute("user") User user, Model model) {
+    public ResponseEntity<?> registerUser(@RequestBody User user) {
         if (userService.existsByEmail(user.getEmail())) {
-            model.addAttribute("error", "Email already exists! Please log in.");
-            return "register";
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.fail("Email already exists! Please log in."));
         }
 
         user.setRole("USER");
         userService.register(user);
 
-        model.addAttribute("message", "Registration successful! Please login.");
-        return "login";
+        // Same semantics as before: after registration, show login.
+        return ResponseEntity.ok(ApiResponse.ok(Map.of(
+                "message", "Registration successful! Please login.",
+                "next", "/login"
+        )));
     }
 
-    // ✅ Logout
-    @GetMapping("/logout")
-    public String logout(HttpSession session) {
+    // ✅ Logout (was GET /logout -> redirect)
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpSession session) {
         session.invalidate();
-        return "redirect:/login?logout=true";
+        return ResponseEntity.ok(ApiResponse.ok(Map.of("message", "Logged out")));
+    }
+
+    // ✅ Helper for Angular to check session (was not in JSP version, but useful)
+    @GetMapping("/me")
+    public ResponseEntity<?> me(HttpSession session) {
+        User user = (User) session.getAttribute("loggedUser");
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiResponse.fail("Not logged in"));
+        }
+        return ResponseEntity.ok(ApiResponse.ok(Map.of(
+                "userId", user.getId(),
+                "name", user.getName(),
+                "email", user.getEmail(),
+                "role", user.getRole()
+        )));
     }
 }
- 

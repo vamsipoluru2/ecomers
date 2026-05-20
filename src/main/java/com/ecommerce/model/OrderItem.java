@@ -1,5 +1,6 @@
 package com.ecommerce.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 
 @Entity
@@ -11,8 +12,11 @@ public class OrderItem {
     private Long id;
 
     // ✅ Each OrderItem belongs to one Order
+    // WHY: @JsonIgnore prevents circular reference when serializing Order →
+    // OrderItem → Order
     @ManyToOne(optional = false)
     @JoinColumn(name = "order_id")
+    @JsonIgnore
     private Order order;
 
     // ✅ Each OrderItem refers to one Product
@@ -35,18 +39,43 @@ public class OrderItem {
     }
 
     // ✅ Getters & Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public Order getOrder() { return order; }
-    public void setOrder(Order order) { this.order = order; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Product getProduct() { return product; }
-    public void setProduct(Product product) { this.product = product; }
+    public Order getOrder() {
+        return order;
+    }
 
-    public int getQuantity() { return quantity; }
-    public void setQuantity(int quantity) { this.quantity = quantity; }
+    public void setOrder(Order order) {
+        this.order = order;
+    }
 
-    public double getTotalPrice() { return totalPrice; }
-    public void setTotalPrice(double totalPrice) { this.totalPrice = totalPrice; }
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
 }
